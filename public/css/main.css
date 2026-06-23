@@ -1500,7 +1500,7 @@ input[type="tel"]:focus::placeholder {
   top: 0;
   left: 0;
   right: 0;
-  z-index: 999;
+  z-index: 99;
   width: 100%;
 }
 .tp-header-menu > nav > ul > li {
@@ -1644,7 +1644,7 @@ input[type="tel"]:focus::placeholder {
   right: 0;
   opacity: 1;
   width: 100%;
-  z-index: 999;
+  z-index: 99;
   visibility: visible;
   background: rgba(38, 37, 40, 0.9);
   box-shadow: 0 2px 6px 0 rgba(19, 19, 22, 0.08);
