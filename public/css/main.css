@@ -318,7 +318,7 @@ li {
 }
 
 html {
-  scroll-behavior: smooth;
+  /* scroll-behavior: smooth removed to prevent conflict with GSAP ScrollSmoother */
 }
 
 @media (min-width: 1400px) {
@@ -347,6 +347,7 @@ body {
   font-weight: normal;
   color: var(--tp-text-body);
   font-family: var(--tp-ff-body);
+  overscroll-behavior-y: none; /* Prevents mobile browser pull-to-refresh/bounce that causes lag */
 }
 
 img {
@@ -1499,7 +1500,7 @@ input[type="tel"]:focus::placeholder {
   top: 0;
   left: 0;
   right: 0;
-  z-index: 9;
+  z-index: 999;
   width: 100%;
 }
 .tp-header-menu > nav > ul > li {
@@ -1643,7 +1644,7 @@ input[type="tel"]:focus::placeholder {
   right: 0;
   opacity: 1;
   width: 100%;
-  z-index: 10;
+  z-index: 999;
   visibility: visible;
   background: rgba(38, 37, 40, 0.9);
   box-shadow: 0 2px 6px 0 rgba(19, 19, 22, 0.08);
@@ -1739,7 +1740,7 @@ input[type="tel"]:focus::placeholder {
    ============================================ */
 
 html {
-    scroll-behavior: smooth;
+    /* scroll-behavior: smooth removed to prevent conflict with GSAP ScrollSmoother */
 }
 
 /* Offset for sticky header */
@@ -2952,15 +2953,9 @@ animation: twynLogoPulse 2.5s ease-in-out infinite;
 @keyframes twynLogoPulse {
 0%, 100% {
 transform: scale(1);
-filter: drop-shadow(0 0 20px rgba(217, 138, 74, 0.6))
-drop-shadow(0 0 40px rgba(217, 138, 74, 0.4))
-drop-shadow(0 0 60px rgba(217, 138, 74, 0.2));
 }
 50% {
 transform: scale(1.08);
-filter: drop-shadow(0 0 30px rgba(217, 138, 74, 0.8))
-drop-shadow(0 0 60px rgba(217, 138, 74, 0.5))
-drop-shadow(0 0 90px rgba(217, 138, 74, 0.3));
 }
 }
 

@@ -169,3 +169,25 @@ document.addEventListener('DOMContentLoaded', function () {
 
     type();
 })();
+
+// Video auto-stop when out of viewport
+document.addEventListener('DOMContentLoaded', function () {
+    const videos = document.querySelectorAll('video');
+    
+    if ('IntersectionObserver' in window) {
+        const videoObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const video = entry.target;
+                if (!entry.isIntersecting) {
+                    if (!video.paused) {
+                        video.pause();
+                    }
+                }
+            });
+        }, { threshold: 0 });
+
+        videos.forEach(video => {
+            videoObserver.observe(video);
+        });
+    }
+});

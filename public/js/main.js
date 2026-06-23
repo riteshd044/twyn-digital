@@ -209,22 +209,30 @@
 
 	// 10. back-to-top //
 	function back_to_top() {
-		
-		let btn = $('#back_to_top');
-		let btn_wrapper = $('.back-to-top-wrapper');
+		let btn = document.getElementById('back_to_top');
+		let btn_wrapper = document.querySelector('.back-to-top-wrapper');
+		let ticking = false;
 
-		$(window).on('scroll',function () {
-			if ($(window).scrollTop() > 300) {
-				btn_wrapper.addClass('back-to-top-btn-show');
-			} else {
-				btn_wrapper.removeClass('back-to-top-btn-show');
+		window.addEventListener('scroll', function () {
+			if (!ticking) {
+				window.requestAnimationFrame(function() {
+					if (window.scrollY > 300) {
+						if (btn_wrapper) btn_wrapper.classList.add('back-to-top-btn-show');
+					} else {
+						if (btn_wrapper) btn_wrapper.classList.remove('back-to-top-btn-show');
+					}
+					ticking = false;
+				});
+				ticking = true;
 			}
-		});
+		}, { passive: true });
 
-		$(btn).on('click', function (e) {
-			e.preventDefault();
-			$('html, body').animate({ scrollTop: 0 }, '300');
-		});
+		if (btn) {
+			btn.addEventListener('click', function (e) {
+				e.preventDefault();
+				window.scrollTo({ top: 0, behavior: 'smooth' });
+			});
+		}
 	}
 	back_to_top();
 	
@@ -245,14 +253,21 @@
 
 
 	// 12. Sticky Header Js //
-	$(window).on('scroll', function () {
-		let scroll = $(window).scrollTop();
-		if (scroll < 20) {
-			$("#header-sticky").removeClass("header-sticky");
-		} else {
-			$("#header-sticky").addClass("header-sticky");
+	let headerTicking = false;
+	const headerSticky = document.getElementById("header-sticky");
+	window.addEventListener('scroll', function () {
+		if (!headerTicking) {
+			window.requestAnimationFrame(function() {
+				if (window.scrollY < 20) {
+					if (headerSticky) headerSticky.classList.remove("header-sticky");
+				} else {
+					if (headerSticky) headerSticky.classList.add("header-sticky");
+				}
+				headerTicking = false;
+			});
+			headerTicking = true;
 		}
-	});
+	}, { passive: true });
 
 	// 13. Open Handlers //
 	$(".tp-offcanvas-open-btn").on("click", function () {
@@ -297,12 +312,16 @@
 	// 17. scroll wrapper //
 	gsap.registerPlugin(ScrollTrigger, ScrollSmoother, ScrollToPlugin);
 	if($('#smooth-wrapper').length && $('#smooth-content').length){
-		ScrollSmoother.create({
-			smooth: 1.35,
-			effects: true,
-			smoothTouch: .1,
-			ignoreMobileResize: true
-		})
+		// Completely bypass ScrollSmoother on mobile for pure native scroll performance
+		let isMobile = window.matchMedia("(max-width: 1024px)").matches || ScrollTrigger.isTouch === 1;
+		if (!isMobile) {
+			ScrollSmoother.create({
+				smooth: 1.35,
+				effects: true,
+				smoothTouch: false,
+				ignoreMobileResize: true
+			})
+		}
 	}
 
 	// 18. webgl images hover animation //
@@ -2686,52 +2705,45 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Active section highlighting on scroll ONLY
+// Active section highlighting using IntersectionObserver for better performance
 // Clicking a link does NOT set active state - only scrolling does
 (function() {
     const sections = document.querySelectorAll('#about, #services, #portfolio, #testimonials, #why-choose-us, #contact');
     const navLinks = document.querySelectorAll('.tp-header-12-menu > nav > ul > li > a[href^="#"]');
     const allNavLis = document.querySelectorAll('.tp-header-12-menu > nav > ul > li');
 
-    function updateActiveLink() {
-        const scrollPos = window.scrollY + 150;
-        let current = '';
-        let inAnySection = false;
+    const observerOptions = {
+        root: null,
+        rootMargin: '-150px 0px -40% 0px',
+        threshold: 0
+    };
 
-        // Check which section we're in
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop;
-            const sectionHeight = section.offsetHeight;
-            if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
-                current = section.getAttribute('id');
-                inAnySection = true;
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const current = entry.target.getAttribute('id');
+
+                // Remove ALL scroll-active classes first
+                allNavLis.forEach(li => li.classList.remove('scroll-active'));
+
+                // Apply scroll-active ONLY to current section link
+                navLinks.forEach(link => {
+                    const li = link.parentElement;
+                    if (link.getAttribute('href') === '#' + current) {
+                        li.classList.add('scroll-active');
+                    }
+                });
             }
         });
+    }, observerOptions);
 
-        // Remove ALL scroll-active classes first
-        allNavLis.forEach(li => li.classList.remove('scroll-active'));
-
-        // If not in any section, leave all inactive
-        if (!inAnySection) {
-            return;
-        }
-
-        // Apply scroll-active ONLY to current section link
-        navLinks.forEach(link => {
-            const li = link.parentElement;
-            if (link.getAttribute('href') === '#' + current) {
-                li.classList.add('scroll-active');
-            }
-        });
-    }
-
-    // Scroll listener - updates active state based on scroll position ONLY
-    window.addEventListener('scroll', updateActiveLink);
+    sections.forEach(section => {
+        observer.observe(section);
+    });
 
     // On load: default to NO active state, then check scroll position
     window.addEventListener('load', function() {
         allNavLis.forEach(li => li.classList.remove('scroll-active', 'current', 'is-active'));
-        updateActiveLink();
     });
 })();
 
