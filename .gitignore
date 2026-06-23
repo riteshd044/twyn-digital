@@ -102,3 +102,15 @@ logs/
 
 .wrangler/
 .dev.vars
+
+# Git internals (prevent Wrangler from scanning)
+.git/
+
+# Wrangler
+.wrangler/
+
+# Videos (keep these out going forward)
+*.mp4
+*.mov
+*.webm
+assets/video/
