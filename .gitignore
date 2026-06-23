@@ -1,3 +1,8 @@
+*.mp4
+*.mov
+*.webm
+assets/video/
+
 # ============================================
 #   .gitignore for Static Website (HTML/CSS/JS)
 #   twyn Digital — Cloudflare Pages Project
