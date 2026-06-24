@@ -4381,7 +4381,7 @@ font-size: 0.8rem;
   width: auto;
   height: auto;
   object-fit: contain;
-  opacity: 0.55;
+  /* opacity: 0.55; */
   transition: all 0.4s ease;
 }
 .st-brand-logo:hover img {
@@ -4954,51 +4954,6 @@ font-size: 0.8rem;
 }
 .twyn-video-frame:hover .twyn-video-shine {
   left: 150%;
-}
-
-/* floating availability badge */
-.twyn-floating-badge {
-  position: absolute;
-  bottom: -22px;
-  right: -10px;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 22px;
-  border-radius: 50px;
-  background: var(--tp-common-white);
-  box-shadow: 0 14px 35px -10px rgba(47,42,45,0.25);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: -0.2px;
-  color: var(--twyn-text);
-  font-family: var(--tp-ff-poppins);
-  animation: twynBadgeFloat 5s ease-in-out infinite;
-  white-space: nowrap;
-}
-@media (max-width: 480px) {
-  .twyn-floating-badge {
-    right: 10px;
-    font-size: 12px;
-    padding: 10px 16px;
-  }
-}
-@keyframes twynBadgeFloat {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-}
-.twyn-badge-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: #45c97a;
-  flex-shrink: 0;
-  animation: twynPulseDot 2s infinite;
-}
-@keyframes twynPulseDot {
-  0% { box-shadow: 0 0 0 0 rgba(69,201,122,0.6); }
-  70% { box-shadow: 0 0 0 10px rgba(69,201,122,0); }
-  100% { box-shadow: 0 0 0 0 rgba(69,201,122,0); }
 }
 
 /* ---- Eyebrow label ---- */
