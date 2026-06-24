@@ -2782,3 +2782,223 @@ document.getElementById('tcContactForm').addEventListener('submit', function(e) 
     submitBtn.disabled = false;
   });
 });
+
+/* ================================================================
+   📱 MOBILE-ONLY UX ENHANCEMENTS (≤ 768px)
+   None of this code runs on desktop/tablet.
+   ================================================================ */
+if (window.innerWidth <= 768) {
+  (function() {
+    'use strict';
+
+    /* ── 1. Scroll Progress Bar ── */
+    var progressBar = document.getElementById('mobScrollProgress');
+    if (progressBar) {
+      var scrollTicking = false;
+      window.addEventListener('scroll', function() {
+        if (!scrollTicking) {
+          window.requestAnimationFrame(function() {
+            var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            var scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            progressBar.style.width = scrollPercent + '%';
+            scrollTicking = false;
+          });
+          scrollTicking = true;
+        }
+      }, { passive: true });
+    }
+
+    /* ── 2. Intersection Observer — Reveal Animations ── */
+    function initMobReveals() {
+      // Auto-add mob-reveal class to key elements
+      var revealSelectors = [
+        '.st-about-heading',
+        '.st-about-wrap',
+        '.tp-about-funcact-item',
+        '.st-service-heading',
+        '.st-service-item',
+        '.st-portfolio-heading',
+        '.twyn-portfolio-category',
+        '.twyn-port-item',
+        '.st-testimonial-heading',
+        '.st-testimonial-box',
+        '.st-testimonial-item',
+        '.st-choose-heading',
+        '.st-choose-list',
+        '.st-choose-text-wrap',
+        '.st-choose-thumb',
+        '.tc-top-left',
+        '.tc-top-right',
+        '.tc-bottom-left',
+        '.tc-bottom-right',
+        '.st-footer-widget',
+        '.twyn-hero-bottom'
+      ];
+
+      revealSelectors.forEach(function(selector) {
+        var elements = document.querySelectorAll(selector);
+        elements.forEach(function(el, index) {
+          el.classList.add('mob-reveal');
+          // Stagger siblings within same selector group
+          if (index > 0 && index <= 5) {
+            el.setAttribute('data-mob-delay', String(index));
+          }
+        });
+      });
+
+      // Now observe all mob-reveal elements
+      var revealElements = document.querySelectorAll('.mob-reveal');
+      if (!revealElements.length) return;
+
+      var revealObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('mob-visible');
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.12,
+        rootMargin: '0px 0px -40px 0px'
+      });
+
+      revealElements.forEach(function(el) {
+        revealObserver.observe(el);
+      });
+    }
+
+    /* ── 3. Tap Feedback on Interactive Elements ── */
+    function initMobTapFeedback() {
+      var tapSelectors = [
+        '.twyn-hero-cta a',
+        '.tp-btn-border-2.st',
+        '.tc-info-row',
+        '.tc-send-btn',
+        '.st-footer-widget-menu ul li a',
+        '.tp-footer-widget-social a',
+        '.st-testimonial-bottom a',
+        '.back-to-top-btn'
+      ];
+
+      tapSelectors.forEach(function(selector) {
+        var elements = document.querySelectorAll(selector);
+        elements.forEach(function(el) {
+          el.addEventListener('touchstart', function() {
+            el.classList.add('mob-tap-active');
+          }, { passive: true });
+
+          el.addEventListener('touchend', function() {
+            setTimeout(function() {
+              el.classList.remove('mob-tap-active');
+            }, 250);
+          }, { passive: true });
+        });
+      });
+    }
+
+    /* ── 4. Counter Animation (replaces GSAP counters on mobile) ── */
+    function initMobCounters() {
+      var counters = document.querySelectorAll('.twyn-counter');
+      if (!counters.length) return;
+
+      var counterObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            var el = entry.target;
+            var target = parseInt(el.getAttribute('data-target'), 10);
+            if (isNaN(target)) return;
+
+            var current = 0;
+            var duration = 1600; // ms
+            var startTime = null;
+
+            function animateCounter(timestamp) {
+              if (!startTime) startTime = timestamp;
+              var progress = Math.min((timestamp - startTime) / duration, 1);
+              // Ease out cubic
+              var eased = 1 - Math.pow(1 - progress, 3);
+              current = Math.round(eased * target);
+              el.textContent = current;
+
+              if (progress < 1) {
+                requestAnimationFrame(animateCounter);
+              }
+            }
+
+            requestAnimationFrame(animateCounter);
+            counterObserver.unobserve(el);
+          }
+        });
+      }, {
+        threshold: 0.3
+      });
+
+      counters.forEach(function(counter) {
+        counterObserver.observe(counter);
+      });
+
+      // Also animate counter fill bars
+      var fills = document.querySelectorAll('.twyn-counter-fill');
+      if (!fills.length) return;
+
+      var fillObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            var fill = entry.target;
+            var fillValue = fill.getAttribute('data-fill');
+            if (fillValue) {
+              setTimeout(function() {
+                fill.style.width = fillValue + '%';
+              }, 300);
+            }
+            fillObserver.unobserve(fill);
+          }
+        });
+      }, {
+        threshold: 0.2
+      });
+
+      fills.forEach(function(fill) {
+        fillObserver.observe(fill);
+      });
+    }
+
+    /* ── 5. Portfolio overlay on tap (toggle for mobile) ── */
+    function initMobPortfolioTap() {
+      var portItems = document.querySelectorAll('.twyn-port-item');
+      portItems.forEach(function(item) {
+        item.addEventListener('click', function(e) {
+          var overlay = item.querySelector('.twyn-port-overlay');
+          if (!overlay) return;
+
+          // Toggle overlay visibility
+          var isVisible = overlay.style.opacity === '1';
+          // Close all others first
+          document.querySelectorAll('.twyn-port-overlay').forEach(function(ov) {
+            ov.style.opacity = '0';
+          });
+          if (!isVisible) {
+            overlay.style.opacity = '1';
+          }
+        });
+      });
+    }
+
+    /* ── Initialize on DOM ready ── */
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function() {
+        initMobReveals();
+        initMobTapFeedback();
+        initMobCounters();
+        initMobPortfolioTap();
+      });
+    } else {
+      initMobReveals();
+      initMobTapFeedback();
+      initMobCounters();
+      initMobPortfolioTap();
+    }
+
+  })();
+}
