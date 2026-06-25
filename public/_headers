@@ -1,0 +1,28 @@
+# Security and caching headers for twyndigital.com on Cloudflare Pages
+
+# Rule for HTML (prevent caching of index.html to ensure users get updates immediately)
+/
+  Cache-Control: no-cache, no-store, must-revalidate
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-XSS-Protection: 1; mode=block
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' cdn.jsdelivr.net cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' fonts.googleapis.com; img-src 'self' data: cdn.jsdelivr.net cdnjs.cloudflare.com; font-src 'self' fonts.gstatic.com; media-src 'self' pub-4cb4f808f0ee46cbb4a1e319863ca49f.r2.dev; connect-src 'self' api.web3forms.com; frame-src 'self';
+
+/index.html
+  Cache-Control: no-cache, no-store, must-revalidate
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-XSS-Protection: 1; mode=block
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' cdn.jsdelivr.net cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' fonts.googleapis.com; img-src 'self' data: cdn.jsdelivr.net cdnjs.cloudflare.com; font-src 'self' fonts.gstatic.com; media-src 'self' pub-4cb4f808f0ee46cbb4a1e319863ca49f.r2.dev; connect-src 'self' api.web3forms.com; frame-src 'self';
+
+# Cache static assets for 1 year
+/css/*
+  Cache-Control: public, max-age=31536000, immutable
+/js/*
+  Cache-Control: public, max-age=31536000, immutable
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
