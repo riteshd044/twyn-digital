@@ -3381,6 +3381,7 @@ only screen and (min-width: 768px) and (max-width: 991px),
   max-width: 700px;
 }
 
+.twyn-hero-text h1,
 .twyn-hero-text h2 {
   font-family: "Poppins", sans-serif;
   font-size: clamp(1.1rem, 2.5vw, 1.6rem);
@@ -3390,6 +3391,7 @@ only screen and (min-width: 768px) and (max-width: 991px),
   margin-bottom: 0.5rem;
 }
 
+.twyn-hero-text h1 strong,
 .twyn-hero-text h2 strong {
   font-weight: 600;
   color: var(--twyn-text);
@@ -3455,6 +3457,7 @@ RESPONSIVE — TABLET & MOBILE
     max-width: 100%;
   }
 
+  .twyn-hero-text h1,
   .twyn-hero-text h2 {
     font-size: 1.15rem;
   }
@@ -3507,6 +3510,7 @@ RESPONSIVE — TABLET & MOBILE
     gap: 1.25rem;
   }
 
+  .twyn-hero-text h1,
   .twyn-hero-text h2 {
     font-size: 1.05rem;
     line-height: 1.45;
@@ -3559,6 +3563,7 @@ RESPONSIVE — TABLET & MOBILE
     gap: 1rem;
   }
 
+  .twyn-hero-text h1,
   .twyn-hero-text h2 {
     font-size: 0.95rem;
   }
@@ -3602,6 +3607,7 @@ RESPONSIVE — TABLET & MOBILE
     gap: 1rem;
   }
 
+  .twyn-hero-text h1,
   .twyn-hero-text h2 {
     font-size: 0.9rem;
   }
@@ -7805,6 +7811,7 @@ only screen and (min-width: 768px) and (max-width: 991px),
     padding: 0 24px 32px;
   }
 
+  .twyn-hero-text h1,
   .twyn-hero-text h2 {
     font-size: clamp(1.3rem, 5.5vw, 1.75rem);
     line-height: 1.4;
@@ -8141,6 +8148,7 @@ only screen and (min-width: 768px) and (max-width: 991px),
 
 /* ── Extra-small phones (≤ 380px) ── */
 @media (max-width: 380px) {
+  .twyn-hero-text h1,
   .twyn-hero-text h2 {
     font-size: 1.2rem;
   }
